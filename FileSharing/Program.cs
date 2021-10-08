@@ -1,3 +1,4 @@
+using FileSharing.Areas.Admin.Services;
 using FileSharing.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -14,15 +15,21 @@ namespace FileSharing
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
 
             using (var scope = host.Services.CreateScope())
             {
                 var provider = scope.ServiceProvider;
-                var dbContext = provider.GetRequiredService<ApplicationDbContext>();
-                dbContext.Database.Migrate();
+                
+                //Production
+                //var dbContext = provider.GetRequiredService<ApplicationDbContext>();
+                //dbContext.Database.Migrate();
+
+                //Seed
+                var userService = provider.GetRequiredService<IUserService>();
+                await userService.InitializeAsync();
             }
                host.Run();
         }

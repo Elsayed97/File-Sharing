@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FileSharing.Models;
 using FileSharing.Data;
+using FileSharing.Areas.Admin.Models;
 
 namespace FileSharingApp
 {
@@ -22,6 +23,9 @@ namespace FileSharingApp
         {
             CreateMap<ApplicationUser, UserViewModel>()
                 .ForMember(u => u.HasPassword, op => op.MapFrom(u => u.PasswordHash != null));
+
+            CreateMap<ApplicationUser, AdminUserViewModel>()
+                .ForMember(u => u.UserId , op => op.MapFrom(u => u.Id));
         }
     }
 }

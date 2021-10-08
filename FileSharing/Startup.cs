@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using FileSharing.Helpers.Mail;
 using FileSharing.Services;
+using FileSharing.Areas.Admin;
 
 namespace FileSharing
 {
@@ -66,6 +67,7 @@ namespace FileSharing
 
             services.AddTransient<IMailHelper, MailHelper>();
             services.AddTransient<IUploadService, UploadService>();
+            services.AddAdminServices();
             services.AddAutoMapper(typeof(Startup));
         }
 
@@ -100,6 +102,10 @@ namespace FileSharing
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

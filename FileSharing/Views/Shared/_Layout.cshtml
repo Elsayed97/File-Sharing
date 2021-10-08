@@ -118,6 +118,10 @@
                                 <a class="dropdown-toggle" href="#" role="button" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@localizer["Account"]</a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Info">@User.Identity.Name</a>
+									@if (User.IsInRole(UserRoles.Admin))
+									{
+                                       <a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Dashboard</a>
+									}
                                     <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">@localizer["Logout"]</a>
                                 </div>
                             </li>
