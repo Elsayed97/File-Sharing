@@ -1,0 +1,74 @@
+﻿@model IEnumerable<FileSharing.Models.UploadViewModel>
+
+@{
+    ViewData["Title"] = "Results";
+}
+
+<h1>Results</h1>
+<br />
+<div class="container">
+    <div class="row">
+   @foreach(var item in Model)
+   {
+    <div class="card mb-3 col-md-12" >
+        <div class="row g-0">
+            <div class="col-md-4">
+                @if (item.ContentType.ToLower().StartsWith("image"))
+                {
+                    <img src="/Uploads/@item.FileName"  class="card-img" alt="Alternate Text">    
+                }
+                
+           </div>
+           <div class="col-md-8">
+               <div class="card-body">
+                   <div class="row">
+                       <div class="col md-6">
+                            <h5 class="card-title">
+                             @item.OriginalFileName
+                            </h5>
+					   </div>
+                       <div class="col md-3">
+                           <strong>Size : </strong>
+                           @{
+                               var size = item.Size / 1024;
+                               if(size < 1024)
+                               {
+                                 <span> @Math.Floor(size) KB</span> }
+                               else
+                              {
+                                 <span> @Math.Floor(size / 1024) MB</span>
+                              }
+                            }
+					   </div>
+                       <div class="col md-3">
+                           <strong>Downloads : @item.DownloadCount</strong>
+					   </div>
+
+				   </div>
+                    
+                    @*<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>*@
+                    <p class="card-text"><small class="text-muted">@item.UploadDate</small></p>
+                    <div class="text-right">
+                        <a asp-action="Download" asp-controller="Uploads" asp-route-id="@item.FileName" class="btn btn-success">Download</a>
+					</div>
+               </div>
+           </div>
+      </div>
+ </div>
+}
+<div class="col-md-12 text-center">
+    <div>
+                @if(ViewBag.CurrentPage + 1 <= ViewBag.PagesCount)
+                {
+                    <a class="btn btn-outline-primary align-right btn-lg" href="/Uploads/Browse?RequiredPage=@(ViewBag.CurrentPage +1)" >Next</a>
+                }
+                @if(ViewBag.CurrentPage - 1 > 0)
+                {
+                    <a class="btn btn-outline-primary align-left btn-lg" href="/Uploads/Browse?RequiredPage=@(ViewBag.CurrentPage -1)" >Prev</a>      
+                }     
+               
+	</div>
+</div>
+</div>
+ 
+</div>

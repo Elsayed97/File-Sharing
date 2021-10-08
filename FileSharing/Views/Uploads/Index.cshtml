@@ -1,0 +1,108 @@
+﻿@using Microsoft.AspNetCore.Localization
+@inject IViewLocalizer localizer
+@model IEnumerable<FileSharing.Models.UploadViewModel>
+
+@{
+    ViewData["Title"] = @localizer["Title"];
+    var ImagesContentTypes= new []{"image/jpeg", "image/png" };
+}
+
+@{
+	var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+	var culture = requestCulture.RequestCulture.Culture.Name;
+	var isArabic = culture == "ar-EG";
+}
+
+<p>
+    <div  class="@(isArabic?"text-right":"text-left")">
+        <a class=" align-right btn btn-primary"  asp-action="Create">@localizer["UploadNewbtn"]</a>
+	</div>
+    
+        
+	
+    
+</p>
+<table class="table">
+    <thead>
+        @foreach(var item in Model)
+        {
+           <tr>
+            <th>
+                @if (ImagesContentTypes.Contains(item.ContentType))
+                {
+                    @localizer["PreviewLabel"]
+                }
+                
+			</th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.FileName)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Size)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContentType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UploadDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DownloadCount)
+            </th>
+            <th></th>
+        </tr>    
+        }
+        
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+            <tr>
+                
+            <td>
+                    @if (ImagesContentTypes.Contains(item.ContentType))
+                    {
+                        
+                        <img data-src="/Uploads/@item.FileName" width="70" height="70" class="img-thumbnail lazyload" alt="Alternate Text" />
+                        
+                    } 
+                    
+               
+			</td>
+               
+            <td>
+                @Html.DisplayFor(modelItem => item.OriginalFileName)
+            </td>
+
+            <td>
+               @{
+                var size = item.Size / 1024;
+                if(size < 1024)
+                {
+                    <span> @Math.Floor(size) KB</span> }
+                else
+                {
+                    <span> @Math.Floor(size / 1024) MB</span>
+                }
+            }
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ContentType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UploadDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DownloadCount)
+            </td>
+            <td>
+                
+                <a asp-action="Delete" asp-route-id ="@item.Id" class="btn btn-outline-danger">@localizer["DeleteBtn"]</a>
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,76 @@
+﻿@inject IViewLocalizer localizer
+@model FileSharing.Models.ContactViewModel
+@{
+    ViewData["Title"] = @localizer["Title"];
+}
+@if(TempData["Message"] != null)
+{
+	<div class=" col col-md-12 text-center alert alert-success">
+		<strong>@TempData["Message"]</strong>
+	</div>
+}
+
+
+<section id="mu-contact">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="mu-contact-area" style="padding-top:0px">
+							<!-- Title -->
+							<div class="row">
+								<div class="col-md-12">
+									<div class="mu-title">
+										<h2>@localizer["Title"]</h2>
+									</div>
+								</div>
+							</div>
+								<!-- Start Contact Content -->
+							<div class="mu-contact-content">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="mu-contact-form-area">
+											<div id="form-messages"></div>
+											<form  method="post" asp-action="Register" asp-controller="Account" class="mu-contact-form">
+												<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+												<div class="form-group">
+                                                   <span class="fa fa-user mu-contact-icon"></span>
+                                                   <input type="text" asp-for="Name" class="form-control" placeholder="@localizer["NameLabel"]" id="name" required>
+                                                   <strong><span asp-validation-for="Name"></span></strong>
+                                                </div>
+                                                <div class="form-group">
+                                                    <span class="fa fa-user mu-contact-icon"></span>
+                                                    <input type="email" asp-for="Email" class="form-control" placeholder="@localizer["EmailLabel"]" id="name" required>
+                                                    <strong><span asp-validation-for="Email"></span></strong>
+                                                 </div>
+												<div class="form-group">  
+													<span class="fa fa-user mu-contact-icon"></span>              
+													<input type="text" class="form-control" asp-for="Subject" placeholder="@localizer["SubjectLabel"]" required>
+													<strong><span asp-validation-for="Subject"></span></strong>
+												</div>
+
+												<div class="form-group">  
+													<span class="fa fa-envelope mu-contact-icon"></span>              
+													<input type="text" class="form-control" asp-for="Message" placeholder="@localizer["MessageLabel"]"  required>
+													<strong><span asp-validation-for="Message"></span></strong>
+												</div> 
+
+												<button type="submit" class="mu-send-msg-btn"><span>@localizer["SendBtn"]</span></button>
+								        	</form>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<!-- End Contact Content -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- End Contact -->
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

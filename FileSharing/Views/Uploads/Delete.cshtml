@@ -1,0 +1,65 @@
+﻿@inject  IViewLocalizer localizer
+@model FileSharing.Models.UploadViewModel
+
+@{
+    ViewData["Title"] = @localizer["Title"];
+}
+
+
+    <div class="col col-md-12 text-center ">
+       <h2>
+          @localizer["ConfirmDelete"]
+	   </h2>
+   </div>
+
+
+
+
+<div>
+    
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OriginalFileName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OriginalFileName)
+        </dd>
+        
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ContentType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ContentType)
+        </dd>
+
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Size)
+        </dt>
+        <dd class = "col-sm-10">
+            @{
+                var size = Model.Size / 1024;
+                if(size < 1024)
+                {
+                    <span> @Math.Floor(size) KB</span> }
+                else
+                {
+                    <span> @Math.Floor(size / 1024) MB</span>
+                }
+            }
+        </dd>
+
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UploadDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UploadDate)
+        </dd>
+    </dl>
+    <div class="col col-md-12  text-center">
+         <form asp-action="Delete">
+           <input type="submit" value="@localizer["DeleteBtn"]" class="btn btn-danger" /> ||
+           <a  class="btn btn-outline-primary" asp-action="Index">@localizer["BackToList"]</a>
+         </form>
+	</div>
+    
+</div>
