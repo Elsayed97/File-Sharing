@@ -1,10 +1,13 @@
 ﻿using FileSharing.Data;
 using FileSharing.Helpers.Mail;
+using FileSharing.Hubs;
 using FileSharing.Models;
 using FileSharing.Resources;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,17 +26,23 @@ namespace FileSharing.Controllers
         private readonly ApplicationDbContext db;
 		private readonly IMailHelper mailHelper;
         private readonly IStringLocalizer<SharedResource> localizer;
+        private readonly IHubContext<NotificationHub> notificationHub;
+        private readonly UserManager<ApplicationUser> userManager;
 
         private string UserId { get { return User.FindFirstValue(ClaimTypes.NameIdentifier); } }
 
         public HomeController(ILogger<HomeController> logger,ApplicationDbContext db
             ,IMailHelper mailHelper
-            ,IStringLocalizer<SharedResource> localizer)
+            ,IStringLocalizer<SharedResource> localizer
+            ,IHubContext<NotificationHub> notificationHub
+            ,UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             this.db = db;
 			this.mailHelper = mailHelper;
             this.localizer = localizer;
+            this.notificationHub = notificationHub;
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
@@ -122,6 +131,14 @@ namespace FileSharing.Controllers
                     Email = "info@FileSharing.com",
                     Body = builder.ToString()
                 });
+
+                var adminUser = await userManager.GetUsersInRoleAsync(UserRoles.Admin);
+                var adminIds = adminUser.Select(u => u.Id);
+                if (adminIds.Any())
+                {
+                    await notificationHub.Clients.Users(adminIds).SendAsync("ReceivedNotification", "You Have unread Contact US Message");
+                }
+
                 return RedirectToAction("Contact");
 			}
             return View(model);
